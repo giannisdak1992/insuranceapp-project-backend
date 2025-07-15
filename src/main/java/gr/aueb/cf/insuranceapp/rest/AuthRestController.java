@@ -6,6 +6,7 @@ import gr.aueb.cf.insuranceapp.dto.AuthenticationRequestDTO;
 import gr.aueb.cf.insuranceapp.dto.AuthenticationResponseDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,11 +20,11 @@ public class AuthRestController {
 
     private final AuthenticationService authenticationService;
 
-    @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponseDTO> login (
-            @Valid @RequestBody AuthenticationRequestDTO authenticationRequestDTO
+    @PostMapping("/authenticate")
+    public ResponseEntity<AuthenticationResponseDTO> authenticate (
+            @RequestBody AuthenticationRequestDTO authenticationRequestDTO
             ) throws AppObjectNotAuthorizedException {
         AuthenticationResponseDTO authenticationResponseDTO = authenticationService.authenticate(authenticationRequestDTO);
-        return ResponseEntity.ok(authenticationResponseDTO);
+        return new ResponseEntity<>(authenticationResponseDTO, HttpStatus.OK);
     }
 }
