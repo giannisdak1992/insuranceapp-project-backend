@@ -10,6 +10,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PersonalInfoReadOnlyDTO {
-    private String Afm;
+    private String placeOfBirth;
     private String identityNumber;
 }

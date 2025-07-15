@@ -62,4 +62,9 @@ public class Customer extends AbstractEntity {
     public void initializeUUID() {
         if (uuid == null) uuid = UUID.randomUUID().toString();
     }
+
+    @PrePersist
+    public void onCreate() {
+        initializeUUID();
+    }
 }

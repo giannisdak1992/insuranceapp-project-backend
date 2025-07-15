@@ -17,6 +17,7 @@ public class Mapper {
     public CustomerReadOnlyDTO mapToCustomerReadOnlyDTO(Customer customer) {
 
         CustomerReadOnlyDTO customerReadOnlyDTO = new CustomerReadOnlyDTO();
+        customerReadOnlyDTO.setId(customer.getId());
         customerReadOnlyDTO.setUuid(customer.getUuid());
         customerReadOnlyDTO.setIsActive(customer.getIsActive());
 
@@ -28,6 +29,7 @@ public class Mapper {
 
         PersonalInfoReadOnlyDTO personalInfoReadOnlyDTO = new PersonalInfoReadOnlyDTO();
         personalInfoReadOnlyDTO.setIdentityNumber(customer.getPersonalInfo().getIdentityNumber());
+        personalInfoReadOnlyDTO.setPlaceOfBirth(customer.getPersonalInfo().getPlaceOfBirth());
         customerReadOnlyDTO.setPersonalInfo(personalInfoReadOnlyDTO);
 
         return customerReadOnlyDTO;
