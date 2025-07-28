@@ -24,6 +24,14 @@ public class Mapper {
         UserReadOnlyDTO userReadOnlyDTO = new UserReadOnlyDTO();
         userReadOnlyDTO.setFirstname(customer.getUser().getFirstname());
         userReadOnlyDTO.setLastname(customer.getUser().getLastname());
+        userReadOnlyDTO.setUsername(customer.getUser().getUsername());
+        userReadOnlyDTO.setPassword(customer.getUser().getPassword());
+        userReadOnlyDTO.setFatherName(customer.getUser().getFatherName());
+        userReadOnlyDTO.setFatherLastname(customer.getUser().getFatherLastname());
+        userReadOnlyDTO.setMotherName(customer.getUser().getMotherName());
+        userReadOnlyDTO.setMotherLastname(customer.getUser().getMotherLastname());
+        userReadOnlyDTO.setDateOfBirth(customer.getUser().getDateOfBirth());
+        userReadOnlyDTO.setRole(customer.getUser().getRole());
         userReadOnlyDTO.setAfm(customer.getUser().getAfm());
         customerReadOnlyDTO.setUser(userReadOnlyDTO);
 
@@ -40,30 +48,42 @@ public class Mapper {
         customer.setIsActive(dto.getIsActive());
 
         UserInsertDTO userInsertDTO = dto.getUser();
-        User user = new User();
-        user.setFirstname(userInsertDTO.getFirstname());
-        user.setLastname(userInsertDTO.getLastname());
-        user.setUsername(userInsertDTO.getUsername());
-        user.setPassword(passwordEncoder.encode(userInsertDTO.getPassword()));
-        user.setAfm(userInsertDTO.getAfm());
-        user.setFatherName(userInsertDTO.getFatherName());
-        user.setFatherLastname(userInsertDTO.getFatherLastname());
-        user.setMotherName(userInsertDTO.getMotherName());
-        user.setMotherLastname(userInsertDTO.getMotherLastname());
-        user.setDateOfBirth(userInsertDTO.getDateOfBirth());
-        user.setRole(userInsertDTO.getRole());
-        user.setIsActive(dto.getIsActive());
-        customer.setUser(user);
+        if (userInsertDTO != null) {
+            User user = new User();
+            user.setFirstname(userInsertDTO.getFirstname());
+            user.setLastname(userInsertDTO.getLastname());
+            user.setUsername(userInsertDTO.getUsername());
+            if (userInsertDTO.getPassword() != null && !userInsertDTO.getPassword().isEmpty()) {
+                user.setPassword(passwordEncoder.encode(userInsertDTO.getPassword()));
+            } else {
+                throw new IllegalArgumentException("Password must not be null or empty");
+            }
+            user.setAfm(userInsertDTO.getAfm());
+            user.setFatherName(userInsertDTO.getFatherName());
+            user.setFatherLastname(userInsertDTO.getFatherLastname());
+            user.setMotherName(userInsertDTO.getMotherName());
+            user.setMotherLastname(userInsertDTO.getMotherLastname());
+            user.setDateOfBirth(userInsertDTO.getDateOfBirth());
+            user.setRole(userInsertDTO.getRole());
+            user.setIsActive(dto.getIsActive());
+            customer.setUser(user);
+        } else {
+            throw new IllegalArgumentException("User data must not be null");
+        }
 
         PersonalInfoInsertDTO personalInfoInsertDTO = dto.getPersonalInfo();
-        PersonalInfo personalInfo = new PersonalInfo();
-        personalInfo.setIdentityNumber(personalInfoInsertDTO.getIdentityNumber());
-        personalInfo.setPlaceOfBirth(personalInfoInsertDTO.getPlaceOfBirth());
-        customer.setPersonalInfo(personalInfo);
+        if (personalInfoInsertDTO != null) {
+            PersonalInfo personalInfo = new PersonalInfo();
+            personalInfo.setIdentityNumber(personalInfoInsertDTO.getIdentityNumber());
+            personalInfo.setPlaceOfBirth(personalInfoInsertDTO.getPlaceOfBirth());
+            customer.setPersonalInfo(personalInfo);
+        } else {
+
+            throw new IllegalArgumentException("PersonalInfo data must not be null");
+        }
 
         return customer;
     }
-
     public CarReadOnlyDTO mapToCarReadOnlyDTO(Car car) {
         CarReadOnlyDTO carReadOnlyDTO = new CarReadOnlyDTO();
         carReadOnlyDTO.setPlateNumber(car.getPlateNumber());
