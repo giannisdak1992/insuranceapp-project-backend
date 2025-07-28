@@ -139,6 +139,26 @@ public class CustomerRestController {
     }
 
     @Operation(
+            summary = "Get customer by ID",
+            description = "Retrieves customer details by their unique ID",
+            security = @SecurityRequirement(name = "Bearer Authentication"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Customer found and returned successfully"),
+                    @ApiResponse(responseCode = "404", description = "Customer with the specified ID was not found", content = @Content)
+            }
+    )
+
+
+    @GetMapping("/customers/{id}")
+    public ResponseEntity<CustomerReadOnlyDTO> getCustomerById(@PathVariable Long id) throws AppObjectInvalidArgumentException {
+        CustomerReadOnlyDTO customer = customerService.getCustomerById(id);
+        if (customer == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(customer);
+    }
+
+    @Operation(
             summary = "Update existing customer",
             security = @SecurityRequirement(name = "Bearer Authentication"),
             responses = {
@@ -147,6 +167,7 @@ public class CustomerRestController {
                     @ApiResponse(responseCode = "404", description = "Customer not found", content = @Content)
             }
     )
+
 
     @PutMapping("/customers/{id}")
     public ResponseEntity<CustomerReadOnlyDTO> updateCustomer(
