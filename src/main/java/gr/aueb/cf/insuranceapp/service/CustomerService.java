@@ -61,6 +61,14 @@ public class CustomerService {
         return mapper.mapToCustomerReadOnlyDTO(customer);
     }
 
+
+    @Transactional
+    public CustomerReadOnlyDTO getCustomerById(Long id) throws AppObjectInvalidArgumentException {
+        Customer customer = customerRepository.findWithUserAndPersonalInfoById(id)
+                .orElseThrow(() -> new AppObjectInvalidArgumentException("Customer", "Customer not found with id: " + id));
+        return mapper.mapToCustomerReadOnlyDTO(customer);
+    }
+
     public CustomerReadOnlyDTO findByUuid(String uuid) throws AppObjectInvalidArgumentException {
         Customer customer = customerRepository.findByUuid(uuid)
                 .orElseThrow(() -> new AppObjectInvalidArgumentException("Customer.", "Customer not found with uuid: " + uuid));
