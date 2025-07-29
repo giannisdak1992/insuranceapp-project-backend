@@ -59,7 +59,7 @@ public class VehicleService {
 
     @Transactional(rollbackOn = Exception.class)
     public MotorCycleReadOnlyDTO saveMotorCycle(MotorCycleInsertDTO motorCycleInsertDTO) throws AppObjectInvalidArgumentException {
-        // Έλεγχος αν υπάρχει ήδη μοτοσυκλέτα με την ίδια πινακίδα
+        // checking if the plate number is already exists
         if (vehicleRepository.findByPlateNumber(motorCycleInsertDTO.getPlateNumber()).isPresent()) {
             throw new AppObjectInvalidArgumentException("Vehicle", "Motorcycle with plate number " + motorCycleInsertDTO.getPlateNumber() + " already exists.");
         }
