@@ -43,6 +43,12 @@ public class Mapper {
         return customerReadOnlyDTO;
     }
 
+
+    public CustomerDropdownDTO mapToCustomerDropdownDTO(Customer customer) {
+        String fullName = customer.getUser().getFirstname() + " " + customer.getUser().getLastname();
+        return new CustomerDropdownDTO(customer.getUser().getAfm(), fullName);
+    }
+
     public Customer mapToCustomerEntity(CustomerInsertDTO dto) {
         Customer customer = new Customer();
         customer.setIsActive(dto.getIsActive());
