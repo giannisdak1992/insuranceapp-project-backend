@@ -43,11 +43,12 @@ public class SecurityConfiguration {
                 .exceptionHandling(exceptions -> exceptions.accessDeniedHandler(myCustomAccessDeniedHandler()))
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/api/customers/save").permitAll()
-                        .requestMatchers("/api/customers/paginated").hasAnyAuthority(Role.ADMIN.name())
+                        .requestMatchers("/api/customers/paginated").permitAll()
                         .requestMatchers("/api/customers/filtered").hasAnyAuthority(Role.ADMIN.name())
-                        .requestMatchers("/api/customers/filtered/paginated").hasAnyAuthority(Role.ADMIN.name())
+                        .requestMatchers("/api/customers/filtered/paginated").permitAll()
                         .requestMatchers("/api/customers/afm/{afm}").hasAnyAuthority(Role.ADMIN.name())
-                        .requestMatchers("/api/customers/{id}").hasAnyAuthority(Role.ADMIN.name())
+                        .requestMatchers("/api/customers/{id}").permitAll()
+                        .requestMatchers("/api/customers/dropdown").permitAll()
                         .requestMatchers("/api/auth/authenticate").permitAll()
                         .requestMatchers("/api/policies/create").hasAnyAuthority(Role.ADMIN.name())
                         .requestMatchers("/api/policies/{uuid}").hasAnyAuthority(Role.ADMIN.name())
@@ -56,7 +57,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/policies/filtered").hasAnyAuthority(Role.ADMIN.name())
                         .requestMatchers("/api/policies/filtered/paginated").hasAnyAuthority(Role.ADMIN.name())
                         .requestMatchers("/api/policies/customer/self").hasAnyAuthority(Role.ADMIN.name(), Role.CUSTOMER.name())
-                        .requestMatchers("/api/vehicles/cars").hasAnyAuthority(Role.ADMIN.name())
+                        .requestMatchers("/api/vehicles/cars").permitAll()
                         .requestMatchers("/api/vehicles/motorcycles").hasAnyAuthority(Role.ADMIN.name())
                        .requestMatchers("/**").permitAll()
                 )
@@ -72,7 +73,7 @@ public class SecurityConfiguration {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowedOrigins(List.of("https://coding-factory.apps.gov.gr",
                 "https://test-coding-factory.apps.gov.gr", "http://localhost:4200", "http://localhost:5173"));
-        corsConfiguration.setAllowedMethods(List.of("*"));
+        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         corsConfiguration.setAllowedHeaders(List.of("*"));
         corsConfiguration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
