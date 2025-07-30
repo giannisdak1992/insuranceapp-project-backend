@@ -5,6 +5,7 @@ import gr.aueb.cf.insuranceapp.core.exceptions.AppObjectInvalidArgumentException
 import gr.aueb.cf.insuranceapp.core.filters.CustomerFilters;
 import gr.aueb.cf.insuranceapp.core.filters.Paginated;
 import gr.aueb.cf.insuranceapp.core.specifications.CustomerSpecification;
+import gr.aueb.cf.insuranceapp.dto.CustomerDropdownDTO;
 import gr.aueb.cf.insuranceapp.dto.CustomerInsertDTO;
 import gr.aueb.cf.insuranceapp.dto.CustomerReadOnlyDTO;
 import gr.aueb.cf.insuranceapp.mapper.Mapper;
@@ -49,6 +50,14 @@ public class CustomerService {
         Customer savedCustomer = customerRepository.save(customer);
 
         return mapper.mapToCustomerReadOnlyDTO(savedCustomer);
+    }
+
+    @Transactional(rollbackOn = Exception.class)
+    public List<CustomerDropdownDTO> getAllCustomersForDropdown() {
+        List<Customer> customers = customerRepository.findAll();
+        return customers.stream()
+                .map(mapper::mapToCustomerDropdownDTO)
+                .collect(Collectors.toList());
     }
 
     public CustomerReadOnlyDTO findByUserAfm(String afm) throws AppObjectInvalidArgumentException {
