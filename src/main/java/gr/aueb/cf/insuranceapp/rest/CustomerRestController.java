@@ -4,6 +4,7 @@ package gr.aueb.cf.insuranceapp.rest;
 import gr.aueb.cf.insuranceapp.core.exceptions.*;
 import gr.aueb.cf.insuranceapp.core.filters.CustomerFilters;
 import gr.aueb.cf.insuranceapp.core.filters.Paginated;
+import gr.aueb.cf.insuranceapp.dto.CustomerDropdownDTO;
 import gr.aueb.cf.insuranceapp.dto.CustomerInsertDTO;
 import gr.aueb.cf.insuranceapp.dto.CustomerReadOnlyDTO;
 import gr.aueb.cf.insuranceapp.service.CustomerService;
@@ -156,6 +157,24 @@ public class CustomerRestController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(customer);
+    }
+
+    @Operation(
+            summary = "Get customers for dropdown",
+            description = "Returns a list of customers with minimal info for dropdown selection",
+            security = @SecurityRequirement(name = "Bearer Authentication"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "List of customers retrieved successfully"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+                    @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content),
+                    @ApiResponse(responseCode = "500", description = "Server error", content = @Content)
+            }
+    )
+
+    @GetMapping("/customers/dropdown")
+    public ResponseEntity<List<CustomerDropdownDTO>> getCustomersForDropdown(){
+        List<CustomerDropdownDTO> dropdownList = customerService.getAllCustomersForDropdown();
+        return ResponseEntity.ok(dropdownList);
     }
 
     @Operation(
