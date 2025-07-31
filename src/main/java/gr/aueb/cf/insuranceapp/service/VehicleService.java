@@ -1,10 +1,7 @@
 package gr.aueb.cf.insuranceapp.service;
 
 import gr.aueb.cf.insuranceapp.core.exceptions.AppObjectInvalidArgumentException;
-import gr.aueb.cf.insuranceapp.dto.CarInsertDTO;
-import gr.aueb.cf.insuranceapp.dto.CarReadOnlyDTO;
-import gr.aueb.cf.insuranceapp.dto.MotorCycleInsertDTO;
-import gr.aueb.cf.insuranceapp.dto.MotorCycleReadOnlyDTO;
+import gr.aueb.cf.insuranceapp.dto.*;
 import gr.aueb.cf.insuranceapp.mapper.Mapper;
 import gr.aueb.cf.insuranceapp.model.Car;
 import gr.aueb.cf.insuranceapp.model.Customer;
@@ -54,6 +51,15 @@ public class VehicleService {
         return mapper.mapToCarReadOnlyDTO(savedCar);
 
 
+    }
+
+
+    @Transactional
+    public Page<CarReadOnlyDTO> getPaginatedCars(int page, int size) {
+        String defaultSort = "id";
+        Pageable pageable = PageRequest.of(page, size, Sort.by(defaultSort).ascending());
+        return vehicleRepository.findAll(pageable)
+                .map(vehicle -> mapper.mapToCarReadOnlyDTO((Car) vehicle));
     }
 
 
