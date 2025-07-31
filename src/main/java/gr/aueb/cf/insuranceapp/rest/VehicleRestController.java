@@ -2,10 +2,7 @@ package gr.aueb.cf.insuranceapp.rest;
 
 import gr.aueb.cf.insuranceapp.core.exceptions.AppObjectInvalidArgumentException;
 import gr.aueb.cf.insuranceapp.core.exceptions.ValidationException;
-import gr.aueb.cf.insuranceapp.dto.CarInsertDTO;
-import gr.aueb.cf.insuranceapp.dto.CarReadOnlyDTO;
-import gr.aueb.cf.insuranceapp.dto.MotorCycleInsertDTO;
-import gr.aueb.cf.insuranceapp.dto.MotorCycleReadOnlyDTO;
+import gr.aueb.cf.insuranceapp.dto.*;
 import gr.aueb.cf.insuranceapp.service.VehicleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,13 +11,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -29,6 +24,37 @@ import org.springframework.web.bind.annotation.RestController;
 public class VehicleRestController {
 
     private final VehicleService vehicleService;
+
+    @Operation(
+            summary = "Get all cars paginated",
+            security = @SecurityRequirement(name = "Bearer Authentication"), // that endpoint requires authentication
+            responses = { // potential Http responses
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Cars Found",
+                            content = @Content(
+                                    mediaType = "application/json", // return JSON TeacherReadOnlyDTO
+                                    schema = @Schema(implementation = CarReadOnlyDTO.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Unauthorized",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Access Denied",
+                            content = @Content
+                    )
+            }
+    )
+    @GetMapping("/cars/paginated")
+    public ResponseEntity<Page<CarReadOnlyDTO>> getPaginatedCustomers(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
+
+        Page<CarReadOnlyDTO> carsPage = vehicleService.getPaginatedCars(page, size);
+        return new ResponseEntity<>(carsPage, HttpStatus.OK);
+    }
     @Operation(
             summary = "Register a new car",
             description = "Creates and saves a new car vehicle record",
