@@ -58,6 +58,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/policies/filtered/paginated").hasAnyAuthority(Role.ADMIN.name())
                         .requestMatchers("/api/policies/customer/self").hasAnyAuthority(Role.ADMIN.name(), Role.CUSTOMER.name())
                         .requestMatchers("/api/vehicles/cars").permitAll()
+                        .requestMatchers("/api/vehicles/cars/paginated").permitAll()
                         .requestMatchers("/api/vehicles/motorcycles").hasAnyAuthority(Role.ADMIN.name())
                        .requestMatchers("/**").permitAll()
                 )
