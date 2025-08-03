@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/vehicles")
@@ -24,6 +26,21 @@ import org.springframework.web.bind.annotation.*;
 public class VehicleRestController {
 
     private final VehicleService vehicleService;
+
+    @Operation(
+            summary = "Get all vehicle plate numbers for a specific customer AFM",
+            security = @SecurityRequirement(name = "Bearer Authentication"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "List of plate numbers"),
+                    @ApiResponse(responseCode = "404", description = "Customer not found"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized")
+            }
+    )
+    @GetMapping("/plates/{afm}")
+    public ResponseEntity<List<String>> getVehiclePlatesByCustomerAfm(@PathVariable String afm) throws AppObjectInvalidArgumentException {
+        List<String> plates = vehicleService.getPlatesByCustomerAfm(afm);
+        return new ResponseEntity<>(plates, HttpStatus.OK);
+    }
 
     @Operation(
             summary = "Get all cars paginated",
