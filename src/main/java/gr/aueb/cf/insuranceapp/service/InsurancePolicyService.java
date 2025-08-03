@@ -73,13 +73,13 @@ public class InsurancePolicyService {
 
         LocalDate today = LocalDate.now();
 
-        // Έλεγχος αν η νέα ημερομηνία είναι στο παρελθόν
+        // checking if the new start date is in the past
         if (newStartDate.isBefore(today)) {
             throw new AppObjectInvalidArgumentException("Invalid Date", "New starting date cannot be in the past.");
         }
 
-        // Έλεγχος αν η νέα ημερομηνία είναι μεγαλύτερη από την τρέχουσα ημερομηνία λήξης
-        if (newStartDate.isBefore(insurancePolicy.getEndDate())) {
+        // checking if the new start date is after the current end date
+        if (!newStartDate.isBefore(insurancePolicy.getEndDate())) {
             throw new AppObjectInvalidArgumentException("Invalid Date", "New starting date must be after the current end date.");
         }
 
