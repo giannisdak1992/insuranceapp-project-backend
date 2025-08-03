@@ -53,6 +53,15 @@ public class VehicleService {
 
     }
 
+    //returning vehicles belonging to the specified afm
+    @Transactional
+    public List<String> getPlatesByCustomerAfm(String afm) {
+        List<Vehicle> vehicles = vehicleRepository.findByCustomerUserAfm(afm);
+        return vehicles.stream()
+                .map(Vehicle::getPlateNumber)
+                .collect(Collectors.toList());
+    }
+
 
     @Transactional
     public Page<CarReadOnlyDTO> getPaginatedCars(int page, int size) {
