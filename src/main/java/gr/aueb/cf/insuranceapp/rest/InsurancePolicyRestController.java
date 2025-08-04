@@ -1,5 +1,6 @@
 package gr.aueb.cf.insuranceapp.rest;
 
+import gr.aueb.cf.insuranceapp.core.exceptions.AppObjectAlreadyExists;
 import gr.aueb.cf.insuranceapp.core.exceptions.AppObjectInvalidArgumentException;
 import gr.aueb.cf.insuranceapp.core.filters.InsurancePolicyFilters;
 import gr.aueb.cf.insuranceapp.core.filters.Paginated;
@@ -44,7 +45,7 @@ public class InsurancePolicyRestController {
     public ResponseEntity<InsurancePolicyReadOnlyDTO> createPolicy(
             @Valid @RequestBody InsurancePolicyInsertDTO dto,
             BindingResult bindingResult
-    ) throws AppObjectInvalidArgumentException {
+    ) throws AppObjectInvalidArgumentException, AppObjectAlreadyExists {
         if (bindingResult.hasErrors()) {
             throw new AppObjectInvalidArgumentException("Validation", "Invalid insurance policy input.");
         }
