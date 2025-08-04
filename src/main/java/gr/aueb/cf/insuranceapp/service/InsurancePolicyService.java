@@ -1,5 +1,6 @@
 package gr.aueb.cf.insuranceapp.service;
 
+import gr.aueb.cf.insuranceapp.core.exceptions.AppObjectAlreadyExists;
 import gr.aueb.cf.insuranceapp.core.exceptions.AppObjectInvalidArgumentException;
 import gr.aueb.cf.insuranceapp.core.filters.CustomerFilters;
 import gr.aueb.cf.insuranceapp.core.filters.InsurancePolicyFilters;
@@ -41,10 +42,14 @@ public class InsurancePolicyService {
 
     @Transactional(rollbackOn = Exception.class)
     public InsurancePolicyReadOnlyDTO saveInsurancePolicy(InsurancePolicyInsertDTO dto)
-            throws AppObjectInvalidArgumentException {
+            throws AppObjectInvalidArgumentException, AppObjectAlreadyExists {
 
         Vehicle vehicle = vehicleRepository.findByPlateNumber(dto.getPlateNumber())
                 .orElseThrow(() -> new AppObjectInvalidArgumentException("Vehicle", "Vehicle not found with plate number: " + dto.getPlateNumber()));
+
+        if (insurancePolicyRepository.existsByVehicleId(vehicle.getId())) {
+            throw new AppObjectAlreadyExists("InsurancePolicy", "An insurance policy already exists for vehicle with plate number: " + vehicle.getPlateNumber());
+        }
 
         if (!vehicle.getCustomer().getUser().getAfm().equals(dto.getCustomerAfm())) {
             throw new AppObjectInvalidArgumentException("Customer", "Customer VAT does not match vehicle's owner.");
@@ -55,6 +60,7 @@ public class InsurancePolicyService {
 
         return mapper.mapToInsurancePolicyReadOnlyDTO(savedPolicy);
     }
+
 
     public InsurancePolicyReadOnlyDTO findByUuid(String uuid) throws AppObjectInvalidArgumentException {
         InsurancePolicy policy = insurancePolicyRepository.findByUuid(uuid)
