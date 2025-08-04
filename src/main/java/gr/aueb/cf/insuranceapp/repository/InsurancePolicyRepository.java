@@ -12,4 +12,6 @@ public interface InsurancePolicyRepository extends JpaRepository<InsurancePolicy
     Optional<InsurancePolicy> findByUuid(String uuid);
 
     List<InsurancePolicy> findByVehicleId(Long vehicleId);
+
+    boolean existsByVehicleId(Long vehicleId);
 }
