@@ -111,6 +111,8 @@ public class InsurancePolicyService {
     }
 
 
+    //fetching policies for the logged in customer
+    @Transactional
     public List<InsurancePolicyReadOnlyDTO> getInsurancePoliciesForCurrentCustomer(InsurancePolicyFilters filters) throws AppObjectInvalidArgumentException {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
 
